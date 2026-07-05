@@ -1,0 +1,273 @@
+<style>
+    body {
+        background-color: #121212;
+        color: #ffffff;
+        margin: 20px;
+    }
+
+    #cd svg.classDiagram .divider path {
+        stroke-opacity: 0.5;
+    }
+
+    #cd svg.classDiagram .row-rect-odd path,
+    #cd svg.classDiagram .row-rect-odd rect,
+    #cd svg.classDiagram .row-rect-even path,
+    #cd svg.classDiagram .row-rect-even rect {
+        stroke: none !important;
+    }
+
+    /* Force note background and text colors */
+    #cd svg.classDiagram .note, 
+    #cd svg.classDiagram .note rect,
+    #cd svg.classDiagram .note polygon,
+    #cd svg.classDiagram .note path,
+    #cd svg.classDiagram rect.note,
+    #cd svg.classDiagram polygon.note,
+    #cd svg.classDiagram path.note {
+        fill: #333333 !important;
+        stroke: #666666 !important;
+    }
+
+    #cd svg.classDiagram .noteText,
+    #cd svg.classDiagram text.note-text,
+    #cd svg.classDiagram .note text {
+        fill: #ffffff !important;
+        color: #ffffff !important;
+    }
+</style>
+<div id="cd"></div>
+<script type="module">
+    import mermaid from 'https://esm.sh/mermaid@11/dist/mermaid.esm.min.mjs';
+    const dark = true;
+    await document.fonts.ready;
+    mermaid.initialize({
+        startOnLoad: false,
+        theme: 'dark',
+        fontFamily: '"Anthropic Sans", sans-serif',
+        themeVariables: {
+            fontSize: '14px',
+            fontFamily: '"Anthropic Sans", sans-serif',
+            noteBkgColor: '#333333',
+            noteTextColor: '#ffffff',
+            noteBorderColor: '#666666'
+        },
+    });
+
+    const src = `classDiagram
+    class IRepository~T~ {
+        <<interface>>
+        +themMoi(item: T) void
+        +capNhat(item: T) void
+        +xoa(id: Object) void
+        +layTatCa() List~T~
+        +layTheoId(id: Object) T
+    }
+
+    class Person {
+        <<abstract>>
+        -id : int
+        -name : String
+        -phone : String
+        -address : String
+        +getId() int
+        +setId(id: int) void
+        +getName() String
+        +setName(name: String) void
+        +getPhone() String
+        +setPhone(phone: String) void
+        +getAddress() String
+        +setAddress(address: String) void
+        +nhapInfo(sc: Scanner) void
+        +toString() String
+    }
+
+    class Owner {
+        +nhapInfo(sc: Scanner) void
+        +toString() String
+    }
+
+    class Mechanic {
+        -specialization : String
+        -salary : double
+        -status : String
+        +getSpecialization() String
+        +setSpecialization(s: String) void
+        +getSalary() double
+        +setSalary(s: double) void
+        +getStatus() String
+        +setStatus(s: String) void
+        +nhapInfo(sc: Scanner) void
+        +toString() String
+    }
+
+    class Vehicle {
+        -licensePlate : String
+        -brand : String
+        -model : String
+        -productionYear : int
+        -ownerId : int
+        +getLicensePlate() String
+        +setLicensePlate(l: String) void
+        +getBrand() String
+        +setBrand(b: String) void
+        +getModel() String
+        +setModel(m: String) void
+        +getProductionYear() int
+        +setProductionYear(y: int) void
+        +getOwnerId() int
+        +setOwnerId(id: int) void
+        +nhapInfo(sc: Scanner) void
+        +toString() String
+    }
+
+    class RepairOrder {
+        -orderId : int
+        -licensePlate : String
+        -entryDate : Date
+        -exitDate : Date
+        -mechanicId : int
+        -status : String
+        +getOrderId() int
+        +setOrderId(id: int) void
+        +getLicensePlate() String
+        +setLicensePlate(l: String) void
+        +getEntryDate() Date
+        +setEntryDate(d: Date) void
+        +getExitDate() Date
+        +setExitDate(d: Date) void
+        +getMechanicId() int
+        +setMechanicId(id: int) void
+        +getStatus() String
+        +setStatus(s: String) void
+        +nhapInfo(sc: Scanner) void
+        +toString() String
+    }
+
+    class RepairOrderDetail {
+        -orderId : int
+        -maHangMuc : String
+        -soLuong : int
+        +getOrderId() int
+        +setOrderId(id: int) void
+        +getMaHangMuc() String
+        +setMaHangMuc(m: String) void
+        +getSoLuong() int
+        +setSoLuong(s: int) void
+    }
+
+    class HangMuc {
+        <<abstract>>
+        -ma : String
+        -ten : String
+        -donGia : double
+        +getMa() String
+        +setMa(m: String) void
+        +getTen() String
+        +setTen(t: String) void
+        +getDonGia() double
+        +setDonGia(d: double) void
+        +nhapInfo(sc: Scanner) void
+        +tinhThanhTien(soLuong: int)* double
+        +toString() String
+    }
+
+    class DichVu {
+        +tinhThanhTien(soLuong: int) double
+    }
+
+    class LinhKien {
+        -soLuongTon : int
+        +getSoLuongTon() int
+        +setSoLuongTon(s: int) void
+        +nhapInfo(sc: Scanner) void
+        +tinhThanhTien(soLuong: int) double
+    }
+
+    class Invoice {
+        -invoiceId : int
+        -orderId : int
+        -paymentDate : Date
+        -totalPartCost : double
+        -totalLaborCost : double
+        -vatRate : double
+        -totalAmount : double
+        +getInvoiceId() int
+        +setInvoiceId(id: int) void
+        +getOrderId() int
+        +setOrderId(id: int) void
+        +getPaymentDate() Date
+        +setPaymentDate(d: Date) void
+        +getTotalPartCost() double
+        +setTotalPartCost(c: double) void
+        +getTotalLaborCost() double
+        +setTotalLaborCost(c: double) void
+        +getVatRate() double
+        +setVatRate(v: double) void
+        +getTotalAmount() double
+        +setTotalAmount(a: double) void
+        +calculateTotalAmount() void
+        +toString() String
+    }
+
+    class DBConnection {
+        <<utility>>
+        +getConnection() Connection$
+    }
+
+    class DAOClasses {
+        <<DAO layer - MySQL>>
+        ChuXeDAO
+        XeDAO
+        KyThuatVienDAO
+        LinhKienDAO
+        DichVuDAO
+        PhieuSuaChuaDAO
+        HoaDonDAO
+    }
+
+    %% 4 Tính chất OOP thể hiện trên mũi tên
+    
+    Person <|-- Owner : Tính Kế thừa
+    Person <|-- Mechanic : Tính Đa hình (Ghi đè nhapInfo)
+    
+    HangMuc <|-- DichVu : Tính Kế thừa
+    HangMuc <|-- LinhKien : Tính Đa hình (Ghi đè tinhThanhTien)
+    
+    DAOClasses ..|> IRepository~T~ : Tính Trừu tượng (Interface)
+
+    %% Các quan hệ tham chiếu
+    Vehicle "0..*" --> "1" Owner : belongs_to
+    RepairOrder "0..*" --> "1" Vehicle : applies_to
+    RepairOrder "0..*" --> "1" Mechanic : assigned_to
+    RepairOrder "1" *-- "0..*" RepairOrderDetail : has
+    RepairOrderDetail "0..*" --> "1" HangMuc : uses
+    Invoice "0..1" --> "1" RepairOrder : pays_for
+`;
+
+    const { svg } = await mermaid.render('cd-svg', src);
+    document.getElementById('cd').innerHTML = svg;
+
+    document.querySelectorAll('#cd svg.classDiagram .node').forEach(node => {
+        const firstPath = node.querySelector('path[d]');
+        if (!firstPath) return;
+        const d = firstPath.getAttribute('d');
+        const nums = d.match(/-?[\d.]+/g)?.map(Number);
+        if (!nums || nums.length < 8) return;
+        const xs = [nums[0], nums[2], nums[4], nums[6]];
+        const ys = [nums[1], nums[3], nums[5], nums[7]];
+        const x = Math.min(...xs), y = Math.min(...ys);
+        const w = Math.max(...xs) - x, h = Math.max(...ys) - y;
+        const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        rect.setAttribute('x', x); rect.setAttribute('y', y);
+        rect.setAttribute('width', w); rect.setAttribute('height', h);
+        rect.setAttribute('rx', '8');
+        for (const a of ['fill', 'stroke', 'stroke-width', 'class', 'style']) {
+            if (firstPath.hasAttribute(a)) rect.setAttribute(a, firstPath.getAttribute(a));
+        }
+        firstPath.replaceWith(rect);
+    });
+
+    document.querySelectorAll('#cd svg.classDiagram .row-rect-odd path, #cd svg.classDiagram .row-rect-even path').forEach(p => {
+        p.setAttribute('stroke', 'none');
+    });
+</script>
