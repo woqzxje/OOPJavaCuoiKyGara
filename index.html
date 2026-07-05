@@ -518,6 +518,123 @@
             margin-top: 4px;
         }
 
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            width: 450px;
+            padding: 32px;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .btn-close {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 20px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .btn-close:hover {
+            color: var(--danger);
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .form-control {
+            width: 100%;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 12px 16px;
+            border-radius: 8px;
+            outline: none;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--accent-primary);
+        }
+        
+        select.form-control {
+            appearance: none;
+            cursor: pointer;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 32px;
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 10px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
         /* Responsive */
         @media (max-width: 1024px) {
             .stats-grid {
@@ -538,14 +655,14 @@
             GaraPro
         </div>
         <ul class="nav-menu">
-            <li><a href="#" class="nav-item active" data-target="dashboard"><i class="fa-solid fa-chart-line"></i> Tổng Quan</a></li>
-            <li><a href="#" class="nav-item" data-target="cars"><i class="fa-solid fa-car"></i> Quản Lý Xe</a></li>
-            <li><a href="#" class="nav-item" data-target="customers"><i class="fa-solid fa-users"></i> Khách Hàng</a></li>
-            <li><a href="#" class="nav-item" data-target="services"><i class="fa-solid fa-wrench"></i> Dịch Vụ & Vật Tư</a></li>
-            <li><a href="#" class="nav-item" data-target="invoices"><i class="fa-solid fa-file-invoice-dollar"></i> Hóa Đơn</a></li>
-            <li><a href="#" class="nav-item" data-target="reports"><i class="fa-solid fa-chart-pie"></i> Báo Cáo</a></li>
-            <li style="margin-top: auto;"><a href="#" class="nav-item" data-target="settings"><i class="fa-solid fa-gear"></i> Cài Đặt</a></li>
-            <li><a href="#" class="nav-item"><i class="fa-solid fa-right-from-bracket"></i> Đăng Xuất</a></li>
+            <li><a href="#" class="nav-item active" data-target="dashboard"><i class="fa-solid fa-border-all"></i> Tổng quan</a></li>
+            <li><a href="#" class="nav-item" data-target="cars-owners"><i class="fa-solid fa-car-side"></i> Xe & Chủ xe</a></li>
+            <li><a href="#" class="nav-item" data-target="technicians"><i class="fa-solid fa-user-group"></i> Kỹ thuật viên</a></li>
+            <li><a href="#" class="nav-item" data-target="inventory"><i class="fa-solid fa-cube"></i> Kho linh kiện</a></li>
+            <li><a href="#" class="nav-item" data-target="repair-tickets"><i class="fa-solid fa-clipboard-list"></i> Phiếu sửa chữa</a></li>
+            <li><a href="#" class="nav-item" data-target="invoices"><i class="fa-solid fa-file-invoice-dollar"></i> Hóa đơn</a></li>
+            <li><a href="#" class="nav-item" data-target="reports"><i class="fa-solid fa-chart-column"></i> Báo cáo thống kê</a></li>
+            <li style="margin-top: auto;"><a href="#" class="nav-item"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</a></li>
         </ul>
     </aside>
 
@@ -575,9 +692,6 @@
                     <h1 class="page-title">Xin chào, Admin 👋</h1>
                     <p class="page-subtitle">Dưới đây là tổng quan hoạt động của Gara trong ngày hôm nay.</p>
                 </div>
-                <button class="btn-primary">
-                    <i class="fa-solid fa-plus"></i> Tiếp Nhận Xe Mới
-                </button>
             </div>
 
             <!-- Stats Grid -->
@@ -653,7 +767,7 @@
                                     <th>Trạng thái</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="vehicleTableBody">
                                 <tr>
                                     <td>
                                         <div class="car-info">
@@ -774,113 +888,728 @@
             </div>
             </div>
 
-            <!-- View: Quản Lý Xe -->
-            <div id="cars" class="dashboard-container view-section">
+            <!-- View: Xe & Chủ xe -->
+            <div id="cars-owners" class="dashboard-container view-section">
                 <div class="page-header">
                     <div>
-                        <h1 class="page-title">Quản Lý Xe</h1>
-                        <p class="page-subtitle">Danh sách phương tiện đang được quản lý trong hệ thống.</p>
+                        <h1 class="page-title">Xe & Chủ xe</h1>
+                        <p class="page-subtitle">Danh sách phương tiện và thông tin khách hàng.</p>
                     </div>
-                    <button class="btn-primary"><i class="fa-solid fa-plus"></i> Thêm Xe Mới</button>
                 </div>
-                <div class="glass-panel" style="padding: 40px; text-align: center; color: var(--text-secondary);">
-                    <i class="fa-solid fa-car" style="font-size: 48px; margin-bottom: 16px; opacity: 0.5;"></i>
-                    <h2>Tính năng đang phát triển</h2>
-                    <p>Giao diện "Quản Lý Xe" sẽ được cập nhật trong phiên bản tiếp theo.</p>
+                
+                <div style="display: flex; gap: 24px; flex-wrap: wrap;">
+                    <!-- Bảng Chủ xe -->
+                    <div class="glass-panel" style="padding: 24px; flex: 1; min-width: 400px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                            <h2 style="font-size: 18px;">Danh sách Chủ xe</h2>
+                            <button class="btn-primary btn-add-owner" style="padding: 6px 12px; font-size: 13px;"><i class="fa-solid fa-plus"></i> Thêm Chủ Xe</button>
+                        </div>
+                        <div style="overflow-x: auto;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Họ và tên</th>
+                                        <th>Số điện thoại</th>
+                                        <th>Địa chỉ</th>
+                                        <th>Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="font-weight: 600;">Nguyễn Văn A</td>
+                                        <td>0901234567</td>
+                                        <td>Quận 1, TP.HCM</td>
+                                        <td>
+                                            <button class="btn-text" title="Sửa"><i class="fa-solid fa-pen"></i></button>
+                                            <button class="btn-text" title="Xóa" style="color: var(--danger); margin-left: 8px;"><i class="fa-solid fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: 600;">Trần Thị B</td>
+                                        <td>0987654321</td>
+                                        <td>Quận 7, TP.HCM</td>
+                                        <td>
+                                            <button class="btn-text" title="Sửa"><i class="fa-solid fa-pen"></i></button>
+                                            <button class="btn-text" title="Xóa" style="color: var(--danger); margin-left: 8px;"><i class="fa-solid fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Bảng Xe -->
+                    <div class="glass-panel" style="padding: 24px; flex: 1; min-width: 400px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                            <h2 style="font-size: 18px;">Danh sách Xe</h2>
+                            <button class="btn-primary btn-add-car" style="padding: 6px 12px; font-size: 13px;"><i class="fa-solid fa-plus"></i> Thêm Xe</button>
+                        </div>
+                        <div style="overflow-x: auto;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Biển số</th>
+                                        <th>Loại xe</th>
+                                        <th>Chủ sở hữu</th>
+                                        <th>Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="font-family: monospace; font-size: 16px; font-weight: bold;">30G-123.45</td>
+                                        <td>Mercedes S450</td>
+                                        <td>Nguyễn Văn A</td>
+                                        <td>
+                                            <button class="btn-text" title="Sửa"><i class="fa-solid fa-pen"></i></button>
+                                            <button class="btn-text" title="Xóa" style="color: var(--danger); margin-left: 8px;"><i class="fa-solid fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-family: monospace; font-size: 16px; font-weight: bold;">51H-567.89</td>
+                                        <td>Toyota Camry</td>
+                                        <td>Trần Thị B</td>
+                                        <td>
+                                            <button class="btn-text" title="Sửa"><i class="fa-solid fa-pen"></i></button>
+                                            <button class="btn-text" title="Xóa" style="color: var(--danger); margin-left: 8px;"><i class="fa-solid fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- View: Khách Hàng -->
-            <div id="customers" class="dashboard-container view-section">
+            <!-- View: Kỹ thuật viên -->
+            <div id="technicians" class="dashboard-container view-section">
                 <div class="page-header">
                     <div>
-                        <h1 class="page-title">Khách Hàng</h1>
-                        <p class="page-subtitle">Quản lý thông tin và lịch sử dịch vụ của khách hàng.</p>
+                        <h1 class="page-title">Kỹ thuật viên</h1>
+                        <p class="page-subtitle">Quản lý đội ngũ nhân sự và kỹ thuật viên.</p>
                     </div>
+                    <button class="btn-primary"><i class="fa-solid fa-plus"></i> Thêm KTV</button>
                 </div>
-                <div class="glass-panel" style="padding: 40px; text-align: center; color: var(--text-secondary);">
-                    <i class="fa-solid fa-users" style="font-size: 48px; margin-bottom: 16px; opacity: 0.5;"></i>
-                    <h2>Tính năng đang phát triển</h2>
+                <div class="glass-panel" style="padding: 24px;">
+                    <div style="overflow-x: auto;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nhân viên</th>
+                                    <th>Chuyên môn</th>
+                                    <th>Trạng thái</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="car-info">
+                                            <img src="https://ui-avatars.com/api/?name=Lê+Văn+C&background=10b981&color=fff" class="avatar" style="width: 36px; height: 36px;">
+                                            <div class="car-details">
+                                                <h4>Lê Văn C</h4>
+                                                <p>KTV Trưởng</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>Động cơ, Điện</td>
+                                    <td><span class="status-badge status-processing">Đang làm việc</span></td>
+                                    <td>
+                                        <button class="btn-text" title="Chi tiết"><i class="fa-solid fa-circle-info"></i></button>
+                                        <button class="btn-text" title="Sửa" style="margin-left: 8px;"><i class="fa-solid fa-pen"></i></button>
+                                        <button class="btn-text" title="Xóa" style="color: var(--danger); margin-left: 8px;"><i class="fa-solid fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="car-info">
+                                            <img src="https://ui-avatars.com/api/?name=Phạm+D&background=f59e0b&color=fff" class="avatar" style="width: 36px; height: 36px;">
+                                            <div class="car-details">
+                                                <h4>Phạm Văn D</h4>
+                                                <p>Thợ máy</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>Khung gầm, Sơn</td>
+                                    <td><span class="status-badge status-completed">Rảnh rỗi</span></td>
+                                    <td>
+                                        <button class="btn-text" title="Chi tiết"><i class="fa-solid fa-circle-info"></i></button>
+                                        <button class="btn-text" title="Sửa" style="margin-left: 8px;"><i class="fa-solid fa-pen"></i></button>
+                                        <button class="btn-text" title="Xóa" style="color: var(--danger); margin-left: 8px;"><i class="fa-solid fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
-            <!-- View: Dịch Vụ & Vật Tư -->
-            <div id="services" class="dashboard-container view-section">
+            <!-- View: Kho linh kiện -->
+            <div id="inventory" class="dashboard-container view-section">
                 <div class="page-header">
                     <div>
-                        <h1 class="page-title">Dịch Vụ & Vật Tư</h1>
+                        <h1 class="page-title">Kho linh kiện</h1>
                     </div>
+                    <button class="btn-primary"><i class="fa-solid fa-plus"></i> Thêm Vật Tư</button>
                 </div>
-                <div class="glass-panel" style="padding: 40px; text-align: center; color: var(--text-secondary);">
-                    <i class="fa-solid fa-wrench" style="font-size: 48px; margin-bottom: 16px; opacity: 0.5;"></i>
-                    <h2>Tính năng đang phát triển</h2>
+                <div class="glass-panel" style="padding: 24px;">
+                    <div style="overflow-x: auto;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Tên linh kiện</th>
+                                    <th>Mã hàng</th>
+                                    <th>Số lượng tồn</th>
+                                    <th>Đơn giá</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Lọc dầu động cơ Toyota</td>
+                                    <td><span style="font-family: monospace;">PT-TYT-001</span></td>
+                                    <td><span style="color: var(--success); font-weight: bold;">45</span></td>
+                                    <td>250,000 đ</td>
+                                    <td>
+                                        <button class="btn-text" title="Sửa"><i class="fa-solid fa-pen"></i></button>
+                                        <button class="btn-text" title="Xóa" style="color: var(--danger); margin-left: 8px;"><i class="fa-solid fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Má phanh trước Mazda 3</td>
+                                    <td><span style="font-family: monospace;">PT-MZD-042</span></td>
+                                    <td><span style="color: var(--warning); font-weight: bold;">5</span></td>
+                                    <td>1,200,000 đ</td>
+                                    <td>
+                                        <button class="btn-text" title="Sửa"><i class="fa-solid fa-pen"></i></button>
+                                        <button class="btn-text" title="Xóa" style="color: var(--danger); margin-left: 8px;"><i class="fa-solid fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Dầu nhớt Castrol 5W-30 (Can 4L)</td>
+                                    <td><span style="font-family: monospace;">LQ-CAS-005</span></td>
+                                    <td><span style="color: var(--success); font-weight: bold;">24</span></td>
+                                    <td>850,000 đ</td>
+                                    <td>
+                                        <button class="btn-text" title="Sửa"><i class="fa-solid fa-pen"></i></button>
+                                        <button class="btn-text" title="Xóa" style="color: var(--danger); margin-left: 8px;"><i class="fa-solid fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
-            <!-- View: Hóa Đơn -->
+            <!-- View: Phiếu sửa chữa -->
+            <div id="repair-tickets" class="dashboard-container view-section">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Phiếu sửa chữa</h1>
+                    </div>
+                    <button class="btn-primary"><i class="fa-solid fa-plus"></i> Lập Phiếu</button>
+                </div>
+                <div class="glass-panel" style="padding: 24px;">
+                    <div style="overflow-x: auto;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Mã phiếu</th>
+                                    <th>Biển số xe</th>
+                                    <th>Ngày lập</th>
+                                    <th>Trạng thái</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="font-weight: 600;">#PSC-10042</td>
+                                    <td style="font-family: monospace; font-size: 16px;">30G-123.45</td>
+                                    <td>24/10/2023</td>
+                                    <td><span class="status-badge status-processing">Đang sửa chữa</span></td>
+                                    <td>
+                                        <button class="btn-text" title="Chi tiết"><i class="fa-solid fa-circle-info"></i></button>
+                                        <button class="btn-text" title="Sửa" style="margin-left: 8px;"><i class="fa-solid fa-pen"></i></button>
+                                        <button class="btn-text" title="Xóa" style="color: var(--danger); margin-left: 8px;"><i class="fa-solid fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: 600;">#PSC-10041</td>
+                                    <td style="font-family: monospace; font-size: 16px;">51H-567.89</td>
+                                    <td>23/10/2023</td>
+                                    <td><span class="status-badge status-completed">Đã bàn giao</span></td>
+                                    <td>
+                                        <button class="btn-text" title="Chi tiết"><i class="fa-solid fa-circle-info"></i></button>
+                                        <button class="btn-text" title="Sửa" style="margin-left: 8px;"><i class="fa-solid fa-pen"></i></button>
+                                        <button class="btn-text" title="Xóa" style="color: var(--danger); margin-left: 8px;"><i class="fa-solid fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- View: Hóa đơn -->
             <div id="invoices" class="dashboard-container view-section">
                 <div class="page-header">
                     <div>
-                        <h1 class="page-title">Hóa Đơn</h1>
+                        <h1 class="page-title">Hóa đơn</h1>
                     </div>
+                    <button class="btn-primary"><i class="fa-solid fa-plus"></i> Lập Hóa Đơn</button>
                 </div>
-                <div class="glass-panel" style="padding: 40px; text-align: center; color: var(--text-secondary);">
-                    <i class="fa-solid fa-file-invoice-dollar" style="font-size: 48px; margin-bottom: 16px; opacity: 0.5;"></i>
-                    <h2>Tính năng đang phát triển</h2>
+                <div class="glass-panel" style="padding: 24px;">
+                    <div style="overflow-x: auto;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Mã hóa đơn</th>
+                                    <th>Khách hàng</th>
+                                    <th>Tổng tiền</th>
+                                    <th>Trạng thái</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="font-weight: 600;">#HD-2023-452</td>
+                                    <td>Trần Thị B</td>
+                                    <td style="font-weight: bold; color: var(--success);">4,500,000 đ</td>
+                                    <td><span class="status-badge status-completed">Đã thanh toán</span></td>
+                                    <td>
+                                        <button class="btn-text" title="In"><i class="fa-solid fa-print"></i></button>
+                                        <button class="btn-text" title="Sửa" style="margin-left: 8px;"><i class="fa-solid fa-pen"></i></button>
+                                        <button class="btn-text" title="Xóa" style="color: var(--danger); margin-left: 8px;"><i class="fa-solid fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: 600;">#HD-2023-453</td>
+                                    <td>Nguyễn Văn A</td>
+                                    <td style="font-weight: bold; color: var(--success);">12,800,000 đ</td>
+                                    <td><span class="status-badge status-pending">Chưa thanh toán</span></td>
+                                    <td>
+                                        <button class="btn-text" title="In"><i class="fa-solid fa-print"></i></button>
+                                        <button class="btn-text" title="Sửa" style="margin-left: 8px;"><i class="fa-solid fa-pen"></i></button>
+                                        <button class="btn-text" title="Xóa" style="color: var(--danger); margin-left: 8px;"><i class="fa-solid fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
             
-            <!-- View: Báo Cáo -->
+            <!-- View: Báo cáo thống kê -->
             <div id="reports" class="dashboard-container view-section">
                 <div class="page-header">
                     <div>
-                        <h1 class="page-title">Báo Cáo</h1>
+                        <h1 class="page-title">Báo cáo thống kê</h1>
                     </div>
                 </div>
-                <div class="glass-panel" style="padding: 40px; text-align: center; color: var(--text-secondary);">
-                    <i class="fa-solid fa-chart-pie" style="font-size: 48px; margin-bottom: 16px; opacity: 0.5;"></i>
-                    <h2>Tính năng đang phát triển</h2>
-                </div>
-            </div>
-            
-            <!-- View: Cài Đặt -->
-            <div id="settings" class="dashboard-container view-section">
-                <div class="page-header">
-                    <div>
-                        <h1 class="page-title">Cài Đặt Hệ Thống</h1>
+                <div class="glass-panel" style="padding: 24px;">
+                    <div style="display: flex; gap: 24px; margin-bottom: 24px;">
+                        <div style="flex: 1; padding: 20px; background: rgba(59, 130, 246, 0.1); border-radius: 12px; border: 1px solid rgba(59, 130, 246, 0.2);">
+                            <h3 style="color: var(--accent-primary); margin-bottom: 8px;">Tổng doanh thu tháng</h3>
+                            <h2 style="font-size: 32px;">342,500,000 đ</h2>
+                        </div>
+                        <div style="flex: 1; padding: 20px; background: rgba(16, 185, 129, 0.1); border-radius: 12px; border: 1px solid rgba(16, 185, 129, 0.2);">
+                            <h3 style="color: var(--success); margin-bottom: 8px;">Lợi nhuận ròng</h3>
+                            <h2 style="font-size: 32px;">115,200,000 đ</h2>
+                        </div>
                     </div>
-                </div>
-                <div class="glass-panel" style="padding: 40px; text-align: center; color: var(--text-secondary);">
-                    <i class="fa-solid fa-gear" style="font-size: 48px; margin-bottom: 16px; opacity: 0.5;"></i>
-                    <h2>Tính năng đang phát triển</h2>
+                    <div style="padding: 40px; text-align: center; border: 1px dashed var(--border-color); border-radius: 12px;">
+                        <i class="fa-solid fa-chart-line" style="font-size: 32px; color: var(--text-secondary); margin-bottom: 16px;"></i>
+                        <p style="color: var(--text-secondary);">Khu vực hiển thị Biểu đồ trực quan (Biểu đồ đường/Biểu đồ tròn)</p>
+                    </div>
                 </div>
             </div>
         </div>
     </main>
 
+    <!-- Generic Dynamic Modal -->
+    <div class="modal-overlay" id="dynamicModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="dynamicModalTitle">Tiêu đề</h2>
+                <button class="btn-close" id="closeDynamicModalBtn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="dynamicForm">
+                <div id="dynamicFormBody">
+                    <!-- Form fields injected here -->
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" id="cancelDynamicModalBtn">Hủy</button>
+                    <button type="submit" class="btn-primary" style="padding: 10px 20px; font-size: 14px;">Lưu Thông Tin</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
-        // Simple interactivity for demonstration
+        // Sidebar Navigation
         document.querySelectorAll('.nav-item').forEach(item => {
             item.addEventListener('click', function(e) {
-                if (this.querySelector('.fa-right-from-bracket')) return; // Ignore logout
+                if (this.querySelector('.fa-right-from-bracket')) return;
                 e.preventDefault();
-                
-                // Update active state in sidebar
                 document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
                 this.classList.add('active');
-
-                // Toggle views
                 const targetId = this.getAttribute('data-target');
                 if (targetId) {
-                    document.querySelectorAll('.view-section').forEach(view => {
-                        view.classList.remove('active');
-                    });
+                    document.querySelectorAll('.view-section').forEach(view => view.classList.remove('active'));
                     const targetView = document.getElementById(targetId);
-                    if (targetView) {
-                        targetView.classList.add('active');
-                    }
+                    if (targetView) targetView.classList.add('active');
                 }
             });
+        });
+
+        // Dynamic Modal Logic
+        const dynamicModal = document.getElementById('dynamicModal');
+        const dynamicForm = document.getElementById('dynamicForm');
+        const dynamicFormBody = document.getElementById('dynamicFormBody');
+        const dynamicModalTitle = document.getElementById('dynamicModalTitle');
+        let currentSubmitAction = null;
+
+        const openDynamicModal = (title, fieldsHTML, submitCallback) => {
+            dynamicModalTitle.textContent = title;
+            dynamicFormBody.innerHTML = fieldsHTML;
+            currentSubmitAction = submitCallback;
+            dynamicModal.classList.add('active');
+        };
+
+        const closeDynamicModal = () => {
+            dynamicModal.classList.remove('active');
+            dynamicForm.reset();
+            currentSubmitAction = null;
+        };
+
+        document.getElementById('closeDynamicModalBtn').addEventListener('click', closeDynamicModal);
+        document.getElementById('cancelDynamicModalBtn').addEventListener('click', closeDynamicModal);
+        dynamicModal.addEventListener('click', (e) => {
+            if (e.target === dynamicModal) closeDynamicModal();
+        });
+
+        dynamicForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (currentSubmitAction) currentSubmitAction();
+        });
+
+        // Helper to append row
+        const appendRow = (tbody, html) => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = html;
+            tbody.insertBefore(tr, tbody.firstChild);
+            tr.style.backgroundColor = 'rgba(59, 130, 246, 0.2)';
+            setTimeout(() => {
+                tr.style.transition = 'background-color 1s ease';
+                tr.style.backgroundColor = 'transparent';
+            }, 500);
+            closeDynamicModal();
+        };
+
+        // Global Action Logic for Mockup (Sửa/Xóa/Thêm)
+        document.body.addEventListener('click', (e) => {
+            // Xóa (Delete)
+            const trashBtn = e.target.closest('.fa-trash');
+            if (trashBtn) {
+                if(confirm('Bạn có chắc chắn muốn xóa mục này khỏi hệ thống?')) {
+                    const row = trashBtn.closest('tr');
+                    if (row) {
+                        row.style.transition = 'all 0.3s ease';
+                        row.style.opacity = '0';
+                        row.style.transform = 'translateX(20px)';
+                        setTimeout(() => row.remove(), 300);
+                    }
+                }
+                return;
+            }
+
+            // Sửa (Edit)
+            const penBtn = e.target.closest('.fa-pen');
+            if (penBtn) {
+                // Mock edit modal
+                openDynamicModal('Cập Nhật Thông Tin', `
+                    <div class="form-group">
+                        <label class="form-label">Trường dữ liệu mẫu</label>
+                        <input type="text" class="form-control" value="Dữ liệu cũ..." required>
+                    </div>
+                `, () => {
+                    alert('Hệ thống: Đã lưu các thay đổi thành công!');
+                    closeDynamicModal();
+                });
+                return;
+            }
+            
+            // Chi tiết (Info)
+            const infoBtn = e.target.closest('.fa-circle-info');
+            if (infoBtn) {
+                alert('Hệ thống: Hiển thị popup thông tin chi tiết đầy đủ.');
+                return;
+            }
+            
+            // In (Print)
+            const printBtn = e.target.closest('.fa-print');
+            if (printBtn) {
+                alert('Hệ thống: Đang kết xuất dữ liệu và kết nối máy in...');
+                return;
+            }
+
+            // Thêm (Add generic)
+            const addBtn = e.target.closest('.btn-primary');
+            if (addBtn) {
+                const activeView = document.querySelector('.view-section.active');
+                if (!activeView) return;
+                const viewId = activeView.id;
+                const tbodies = activeView.querySelectorAll('tbody');
+                
+                // Dashboard: Thêm xe
+                if (addBtn.classList.contains('btn-add-vehicle') && viewId === 'dashboard') {
+                    openDynamicModal('Tiếp Nhận Xe Mới', `
+                        <div class="form-group">
+                            <label class="form-label">Tên xe (Dòng xe)</label>
+                            <input type="text" class="form-control" id="f_carName" placeholder="VD: Mazda 3" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Chủ xe (Khách hàng)</label>
+                            <input type="text" class="form-control" id="f_customer" placeholder="VD: Nguyễn Văn A" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Biển số xe</label>
+                            <input type="text" class="form-control" id="f_plate" placeholder="VD: 30A-123.45" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Dịch vụ yêu cầu</label>
+                            <select class="form-control" id="f_service" required>
+                                <option value="Bảo dưỡng định kỳ">Bảo dưỡng định kỳ</option>
+                                <option value="Sửa chữa chung">Sửa chữa chung</option>
+                                <option value="Đồng sơn">Đồng sơn</option>
+                            </select>
+                        </div>
+                    `, () => {
+                        const name = document.getElementById('f_carName').value;
+                        const cus = document.getElementById('f_customer').value;
+                        const plate = document.getElementById('f_plate').value;
+                        const srv = document.getElementById('f_service').value;
+                        const targetTbody = document.getElementById('vehicleTableBody');
+                        if (targetTbody) {
+                            appendRow(targetTbody, `
+                                <td>
+                                    <div class="car-info">
+                                        <div class="car-avatar" style="background: rgba(59, 130, 246, 0.1); color: var(--accent-primary);">
+                                            <i class="fa-solid fa-car"></i>
+                                        </div>
+                                        <div class="car-details">
+                                            <h4>${name}</h4>
+                                            <p>${cus}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="font-family: monospace; font-size: 16px;">${plate}</td>
+                                <td>${srv}</td>
+                                <td><span class="status-badge status-pending">Chờ tiếp nhận</span></td>
+                            `);
+                        }
+                    });
+                }
+                
+                // Chủ xe
+                else if (addBtn.classList.contains('btn-add-owner')) {
+                    openDynamicModal('Thêm Chủ Xe Mới', `
+                        <div class="form-group">
+                            <label class="form-label">Họ và tên</label>
+                            <input type="text" class="form-control" id="f_ownerName" placeholder="VD: Hoàng Văn Z" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Số điện thoại</label>
+                            <input type="tel" class="form-control" id="f_ownerPhone" placeholder="VD: 0901234567" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Địa chỉ</label>
+                            <input type="text" class="form-control" id="f_ownerAddress" placeholder="VD: Quận 1, TP.HCM">
+                        </div>
+                    `, () => {
+                        const n = document.getElementById('f_ownerName').value;
+                        const p = document.getElementById('f_ownerPhone').value;
+                        const a = document.getElementById('f_ownerAddress').value || 'Đang cập nhật';
+                        appendRow(tbodies[0], `
+                            <td style="font-weight: 600;">${n}</td>
+                            <td>${p}</td>
+                            <td>${a}</td>
+                            <td>
+                                <button class="btn-text" title="Sửa"><i class="fa-solid fa-pen"></i></button>
+                                <button class="btn-text" title="Xóa" style="color: var(--danger); margin-left: 8px;"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        `);
+                    });
+                }
+                
+                // Xe (trong Xe & Chủ xe)
+                else if (addBtn.classList.contains('btn-add-car')) {
+                    openDynamicModal('Thêm Thông Tin Xe', `
+                        <div class="form-group">
+                            <label class="form-label">Biển số xe</label>
+                            <input type="text" class="form-control" id="f_carPlate" placeholder="VD: 51A-999.99" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Loại xe (Hãng/Dòng)</label>
+                            <input type="text" class="form-control" id="f_carModel" placeholder="VD: Honda Civic" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Chọn Chủ Sở Hữu</label>
+                            <select class="form-control" id="f_carOwner">
+                                <option>Nguyễn Văn A</option>
+                                <option>Trần Thị B</option>
+                            </select>
+                        </div>
+                    `, () => {
+                        const plate = document.getElementById('f_carPlate').value;
+                        const model = document.getElementById('f_carModel').value;
+                        const owner = document.getElementById('f_carOwner').value;
+                        appendRow(tbodies[1], `
+                            <td style="font-family: monospace; font-size: 16px; font-weight: bold;">${plate}</td>
+                            <td>${model}</td>
+                            <td>${owner}</td>
+                            <td>
+                                <button class="btn-text" title="Sửa"><i class="fa-solid fa-pen"></i></button>
+                                <button class="btn-text" title="Xóa" style="color: var(--danger); margin-left: 8px;"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        `);
+                    });
+                }
+
+                // Kỹ thuật viên
+                else if (viewId === 'technicians') {
+                    openDynamicModal('Thêm Kỹ Thuật Viên', `
+                        <div class="form-group">
+                            <label class="form-label">Họ và tên</label>
+                            <input type="text" class="form-control" id="f_techName" placeholder="VD: Lê Văn E" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Chuyên môn chính</label>
+                            <input type="text" class="form-control" id="f_techSpec" placeholder="VD: Động cơ, Khung gầm" required>
+                        </div>
+                    `, () => {
+                        const name = document.getElementById('f_techName').value;
+                        const spec = document.getElementById('f_techSpec').value;
+                        appendRow(tbodies[0], `
+                            <td>
+                                <div class="car-info">
+                                    <div class="car-avatar" style="background: rgba(16, 185, 129, 0.1); color: var(--success); display:flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:8px;">
+                                        <i class="fa-solid fa-user"></i>
+                                    </div>
+                                    <div class="car-details">
+                                        <h4>${name}</h4>
+                                        <p>KTV Mới</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>${spec}</td>
+                            <td><span class="status-badge status-completed">Rảnh rỗi</span></td>
+                            <td>
+                                <button class="btn-text" title="Chi tiết"><i class="fa-solid fa-circle-info"></i></button>
+                                <button class="btn-text" title="Sửa" style="margin-left: 8px;"><i class="fa-solid fa-pen"></i></button>
+                                <button class="btn-text" title="Xóa" style="color: var(--danger); margin-left: 8px;"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        `);
+                    });
+                }
+                
+                // Kho linh kiện
+                else if (viewId === 'inventory') {
+                    openDynamicModal('Thêm Vật Tư / Linh Kiện', `
+                        <div class="form-group">
+                            <label class="form-label">Tên linh kiện</label>
+                            <input type="text" class="form-control" id="f_invName" placeholder="VD: Lọc gió điều hòa" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Mã hàng hóa</label>
+                            <input type="text" class="form-control" id="f_invCode" placeholder="VD: PT-001" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Số lượng tồn kho</label>
+                            <input type="number" class="form-control" id="f_invQty" value="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Đơn giá (VND)</label>
+                            <input type="text" class="form-control" id="f_invPrice" placeholder="VD: 500,000" required>
+                        </div>
+                    `, () => {
+                        const n = document.getElementById('f_invName').value;
+                        const c = document.getElementById('f_invCode').value;
+                        const q = document.getElementById('f_invQty').value;
+                        const p = document.getElementById('f_invPrice').value;
+                        appendRow(tbodies[0], `
+                            <td>${n}</td>
+                            <td><span style="font-family: monospace;">${c}</span></td>
+                            <td><span style="color: var(--success); font-weight: bold;">${q}</span></td>
+                            <td>${p} đ</td>
+                            <td>
+                                <button class="btn-text" title="Sửa"><i class="fa-solid fa-pen"></i></button>
+                                <button class="btn-text" title="Xóa" style="color: var(--danger); margin-left: 8px;"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        `);
+                    });
+                }
+                
+                // Phiếu sửa chữa
+                else if (viewId === 'repair-tickets') {
+                    openDynamicModal('Lập Phiếu Sửa Chữa Mới', `
+                        <div class="form-group">
+                            <label class="form-label">Biển số xe cần sửa</label>
+                            <select class="form-control" id="f_ticPlate">
+                                <option>30G-123.45</option>
+                                <option>51H-567.89</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Ghi chú (Tình trạng ban đầu)</label>
+                            <input type="text" class="form-control" id="f_ticNote" placeholder="VD: Xe đề không nổ" required>
+                        </div>
+                    `, () => {
+                        const plate = document.getElementById('f_ticPlate').value;
+                        appendRow(tbodies[0], `
+                            <td style="font-weight: 600;">#PSC-NEW</td>
+                            <td style="font-family: monospace; font-size: 16px;">${plate}</td>
+                            <td>Vừa xong</td>
+                            <td><span class="status-badge status-pending">Chờ xử lý</span></td>
+                            <td>
+                                <button class="btn-text" title="Chi tiết"><i class="fa-solid fa-circle-info"></i></button>
+                                <button class="btn-text" title="Sửa" style="margin-left: 8px;"><i class="fa-solid fa-pen"></i></button>
+                                <button class="btn-text" title="Xóa" style="color: var(--danger); margin-left: 8px;"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        `);
+                    });
+                }
+                
+                // Hóa đơn
+                else if (viewId === 'invoices') {
+                    openDynamicModal('Lập Hóa Đơn Thanh Toán', `
+                        <div class="form-group">
+                            <label class="form-label">Khách hàng</label>
+                            <select class="form-control" id="f_invCus">
+                                <option>Nguyễn Văn A</option>
+                                <option>Trần Thị B</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Tổng tiền thanh toán (VND)</label>
+                            <input type="text" class="form-control" id="f_invTotal" placeholder="VD: 1,500,000" required>
+                        </div>
+                    `, () => {
+                        const cus = document.getElementById('f_invCus').value;
+                        const total = document.getElementById('f_invTotal').value;
+                        appendRow(tbodies[0], `
+                            <td style="font-weight: 600;">#HD-NEW</td>
+                            <td>${cus}</td>
+                            <td style="font-weight: bold; color: var(--success);">${total} đ</td>
+                            <td><span class="status-badge status-pending">Chưa thanh toán</span></td>
+                            <td>
+                                <button class="btn-text" title="In"><i class="fa-solid fa-print"></i></button>
+                                <button class="btn-text" title="Sửa" style="margin-left: 8px;"><i class="fa-solid fa-pen"></i></button>
+                                <button class="btn-text" title="Xóa" style="color: var(--danger); margin-left: 8px;"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        `);
+                    });
+                }
+            }
         });
     </script>
 </body>
