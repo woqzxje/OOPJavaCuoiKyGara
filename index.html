@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GaraPro - Hệ Thống Quản Lý Gara Ô Tô</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-primary: #09090b;
+            --bg-secondary: #18181b;
+            --bg-glass: rgba(24, 24, 27, 0.7);
+            --text-primary: #f4f4f5;
+            --text-secondary: #a1a1aa;
+            --accent-primary: #3b82f6;
+            --accent-hover: #2563eb;
+            --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --sidebar-width: 280px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.05), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.05), transparent 25%);
+        }
+
+        /* Glassmorphism Utilities */
+        .glass-panel {
+            background: var(--bg-glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            height: 100%;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            z-index: 10;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 40px;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo i {
+            -webkit-text-fill-color: #3b82f6;
+        }
+
+        .nav-menu {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 14px 18px;
+            border-radius: 12px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--accent-primary);
+            transform: translateX(5px);
+        }
+
+        .nav-item i {
+            font-size: 18px;
+            width: 24px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+        }
+
+        .main-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .main-content::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        .main-content::-webkit-scrollbar-thumb {
+            background: var(--bg-secondary);
+            border-radius: 4px;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 40px;
+            position: sticky;
+            top: 0;
+            background: rgba(9, 9, 11, 0.8);
+            backdrop-filter: blur(12px);
+            z-index: 5;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 10px 20px;
+            width: 350px;
+            transition: all 0.3s ease;
+        }
+
+        .search-bar:focus-within {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+
+        .search-bar input {
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            outline: none;
+            width: 100%;
+            margin-left: 10px;
+            font-family: inherit;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .notification-btn {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .notification-btn:hover {
+            background: var(--border-color);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            background: var(--danger);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--bg-primary);
+        }
+
+        .avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--accent-primary);
+            cursor: pointer;
+        }
+
+        /* Dashboard Content */
+        .dashboard-container {
+            padding: 32px 40px;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .view-section {
+            display: none;
+        }
+
+        .view-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .page-header {
+            margin-bottom: 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+
+        .btn-primary {
+            background: var(--accent-gradient);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+            border-radius: 50%;
+            transform: translate(30%, -30%);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .icon-blue { background: rgba(59, 130, 246, 0.1); color: var(--accent-primary); }
+        .icon-green { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+        .icon-orange { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+        .icon-purple { background: rgba(139, 92, 246, 0.1); color: #8b5cf6; }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .stat-trend {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .trend-up { color: var(--success); }
+        .trend-down { color: var(--danger); }
+
+        /* Tables & Lists */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .panel-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .btn-text {
+            background: transparent;
+            border: none;
+            color: var(--accent-primary);
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-text:hover {
+            text-decoration: underline;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 16px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 14px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            font-size: 15px;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .car-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .car-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+        }
+
+        .car-details h4 {
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .car-details p {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-processing { background: rgba(59, 130, 246, 0.1); color: var(--accent-primary); }
+        .status-completed { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+        .status-pending { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+
+        /* Activity Timeline */
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .activity-item {
+            display: flex;
+            gap: 16px;
+        }
+
+        .activity-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .activity-item:not(:last-child) .activity-icon::after {
+            content: '';
+            position: absolute;
+            top: 32px;
+            bottom: -20px;
+            left: 15px;
+            width: 2px;
+            background: var(--border-color);
+        }
+
+        .activity-details h4 {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .activity-details p {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .activity-time {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">
+            <i class="fa-solid fa-car-side"></i>
+            GaraPro
+        </div>
+        <ul class="nav-menu">
+            <li><a href="#" class="nav-item active" data-target="dashboard"><i class="fa-solid fa-chart-line"></i> Tổng Quan</a></li>
+            <li><a href="#" class="nav-item" data-target="cars"><i class="fa-solid fa-car"></i> Quản Lý Xe</a></li>
+            <li><a href="#" class="nav-item" data-target="customers"><i class="fa-solid fa-users"></i> Khách Hàng</a></li>
+            <li><a href="#" class="nav-item" data-target="services"><i class="fa-solid fa-wrench"></i> Dịch Vụ & Vật Tư</a></li>
+            <li><a href="#" class="nav-item" data-target="invoices"><i class="fa-solid fa-file-invoice-dollar"></i> Hóa Đơn</a></li>
+            <li><a href="#" class="nav-item" data-target="reports"><i class="fa-solid fa-chart-pie"></i> Báo Cáo</a></li>
+            <li style="margin-top: auto;"><a href="#" class="nav-item" data-target="settings"><i class="fa-solid fa-gear"></i> Cài Đặt</a></li>
+            <li><a href="#" class="nav-item"><i class="fa-solid fa-right-from-bracket"></i> Đăng Xuất</a></li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div class="search-bar">
+                <i class="fa-solid fa-search text-secondary"></i>
+                <input type="text" placeholder="Tìm kiếm xe, khách hàng, biển số...">
+            </div>
+            <div class="user-profile">
+                <button class="notification-btn">
+                    <i class="fa-regular fa-bell"></i>
+                    <span class="notification-badge">3</span>
+                </button>
+                <img src="https://ui-avatars.com/api/?name=Admin+User&background=3b82f6&color=fff" alt="Admin" class="avatar">
+            </div>
+        </header>
+
+        <!-- Views Container -->
+        <div class="views-container">
+            <!-- Dashboard Content -->
+            <div id="dashboard" class="dashboard-container view-section active">
+                <div class="page-header">
+                <div>
+                    <h1 class="page-title">Xin chào, Admin 👋</h1>
+                    <p class="page-subtitle">Dưới đây là tổng quan hoạt động của Gara trong ngày hôm nay.</p>
+                </div>
+                <button class="btn-primary">
+                    <i class="fa-solid fa-plus"></i> Tiếp Nhận Xe Mới
+                </button>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="glass-panel stat-card">
+                    <div class="stat-header">
+                        <span class="stat-label">Doanh thu tháng</span>
+                        <div class="stat-icon icon-blue">
+                            <i class="fa-solid fa-wallet"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">124.5M</div>
+                    <div class="stat-trend trend-up">
+                        <i class="fa-solid fa-arrow-trend-up"></i> +12.5% so với tháng trước
+                    </div>
+                </div>
+
+                <div class="glass-panel stat-card">
+                    <div class="stat-header">
+                        <span class="stat-label">Xe đang sửa chữa</span>
+                        <div class="stat-icon icon-orange">
+                            <i class="fa-solid fa-screwdriver-wrench"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">18</div>
+                    <div class="stat-trend trend-up">
+                        <i class="fa-solid fa-arrow-trend-up"></i> +3 xe hôm nay
+                    </div>
+                </div>
+
+                <div class="glass-panel stat-card">
+                    <div class="stat-header">
+                        <span class="stat-label">Đã hoàn thành</span>
+                        <div class="stat-icon icon-green">
+                            <i class="fa-solid fa-check-circle"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">142</div>
+                    <div class="stat-trend trend-up">
+                        <i class="fa-solid fa-arrow-trend-up"></i> +8% so với tuần trước
+                    </div>
+                </div>
+
+                <div class="glass-panel stat-card">
+                    <div class="stat-header">
+                        <span class="stat-label">Khách hàng mới</span>
+                        <div class="stat-icon icon-purple">
+                            <i class="fa-solid fa-user-plus"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">32</div>
+                    <div class="stat-trend trend-down">
+                        <i class="fa-solid fa-arrow-trend-down"></i> -2% so với tháng trước
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Grid -->
+            <div class="content-grid">
+                <!-- Recent Vehicles -->
+                <div class="glass-panel" style="padding: 24px;">
+                    <div class="panel-header">
+                        <h2 class="panel-title">Tiến Độ Sửa Chữa</h2>
+                        <button class="btn-text">Xem tất cả</button>
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Thông tin xe</th>
+                                    <th>Biển số</th>
+                                    <th>Dịch vụ</th>
+                                    <th>Trạng thái</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="car-info">
+                                            <div class="car-avatar">
+                                                <i class="fa-solid fa-car-side"></i>
+                                            </div>
+                                            <div class="car-details">
+                                                <h4>Mercedes S450</h4>
+                                                <p>Nguyễn Văn A</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td style="font-family: monospace; font-size: 16px;">30G-123.45</td>
+                                    <td>Bảo dưỡng cấp lớn</td>
+                                    <td><span class="status-badge status-processing">Đang xử lý</span></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="car-info">
+                                            <div class="car-avatar">
+                                                <i class="fa-solid fa-car-side"></i>
+                                            </div>
+                                            <div class="car-details">
+                                                <h4>Toyota Camry</h4>
+                                                <p>Trần Thị B</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td style="font-family: monospace; font-size: 16px;">51H-567.89</td>
+                                    <td>Thay dầu động cơ</td>
+                                    <td><span class="status-badge status-completed">Hoàn thành</span></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="car-info">
+                                            <div class="car-avatar">
+                                                <i class="fa-solid fa-car-side"></i>
+                                            </div>
+                                            <div class="car-details">
+                                                <h4>Ford Ranger</h4>
+                                                <p>Lê Văn C</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td style="font-family: monospace; font-size: 16px;">15A-987.65</td>
+                                    <td>Gò sơn cản trước</td>
+                                    <td><span class="status-badge status-pending">Chờ vật tư</span></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="car-info">
+                                            <div class="car-avatar">
+                                                <i class="fa-solid fa-car-side"></i>
+                                            </div>
+                                            <div class="car-details">
+                                                <h4>Honda CR-V</h4>
+                                                <p>Phạm Văn D</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td style="font-family: monospace; font-size: 16px;">29D-345.67</td>
+                                    <td>Kiểm tra phanh</td>
+                                    <td><span class="status-badge status-processing">Đang xử lý</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="glass-panel" style="padding: 24px;">
+                    <div class="panel-header">
+                        <h2 class="panel-title">Hoạt Động Gần Đây</h2>
+                    </div>
+                    <div class="activity-list">
+                        <div class="activity-item">
+                            <div class="activity-icon text-success">
+                                <i class="fa-solid fa-check"></i>
+                            </div>
+                            <div class="activity-details">
+                                <h4>Thanh toán thành công</h4>
+                                <p>Hóa đơn #HD1024 - 15,400,000đ</p>
+                                <div class="activity-time">10 phút trước</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon text-primary">
+                                <i class="fa-solid fa-car"></i>
+                            </div>
+                            <div class="activity-details">
+                                <h4>Tiếp nhận xe mới</h4>
+                                <p>Toyota Vios - Biển số: 30F-123.45</p>
+                                <div class="activity-time">45 phút trước</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon text-warning">
+                                <i class="fa-solid fa-box-open"></i>
+                            </div>
+                            <div class="activity-details">
+                                <h4>Nhập kho vật tư</h4>
+                                <p>Lọc dầu, Má phanh (SL: 50)</p>
+                                <div class="activity-time">2 giờ trước</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon text-purple">
+                                <i class="fa-solid fa-user"></i>
+                            </div>
+                            <div class="activity-details">
+                                <h4>Thêm khách hàng mới</h4>
+                                <p>KH: Vũ Hoàng E - SĐT: 0987xxx</p>
+                                <div class="activity-time">3 giờ trước</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+            <!-- View: Quản Lý Xe -->
+            <div id="cars" class="dashboard-container view-section">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Quản Lý Xe</h1>
+                        <p class="page-subtitle">Danh sách phương tiện đang được quản lý trong hệ thống.</p>
+                    </div>
+                    <button class="btn-primary"><i class="fa-solid fa-plus"></i> Thêm Xe Mới</button>
+                </div>
+                <div class="glass-panel" style="padding: 40px; text-align: center; color: var(--text-secondary);">
+                    <i class="fa-solid fa-car" style="font-size: 48px; margin-bottom: 16px; opacity: 0.5;"></i>
+                    <h2>Tính năng đang phát triển</h2>
+                    <p>Giao diện "Quản Lý Xe" sẽ được cập nhật trong phiên bản tiếp theo.</p>
+                </div>
+            </div>
+
+            <!-- View: Khách Hàng -->
+            <div id="customers" class="dashboard-container view-section">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Khách Hàng</h1>
+                        <p class="page-subtitle">Quản lý thông tin và lịch sử dịch vụ của khách hàng.</p>
+                    </div>
+                </div>
+                <div class="glass-panel" style="padding: 40px; text-align: center; color: var(--text-secondary);">
+                    <i class="fa-solid fa-users" style="font-size: 48px; margin-bottom: 16px; opacity: 0.5;"></i>
+                    <h2>Tính năng đang phát triển</h2>
+                </div>
+            </div>
+
+            <!-- View: Dịch Vụ & Vật Tư -->
+            <div id="services" class="dashboard-container view-section">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Dịch Vụ & Vật Tư</h1>
+                    </div>
+                </div>
+                <div class="glass-panel" style="padding: 40px; text-align: center; color: var(--text-secondary);">
+                    <i class="fa-solid fa-wrench" style="font-size: 48px; margin-bottom: 16px; opacity: 0.5;"></i>
+                    <h2>Tính năng đang phát triển</h2>
+                </div>
+            </div>
+
+            <!-- View: Hóa Đơn -->
+            <div id="invoices" class="dashboard-container view-section">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Hóa Đơn</h1>
+                    </div>
+                </div>
+                <div class="glass-panel" style="padding: 40px; text-align: center; color: var(--text-secondary);">
+                    <i class="fa-solid fa-file-invoice-dollar" style="font-size: 48px; margin-bottom: 16px; opacity: 0.5;"></i>
+                    <h2>Tính năng đang phát triển</h2>
+                </div>
+            </div>
+            
+            <!-- View: Báo Cáo -->
+            <div id="reports" class="dashboard-container view-section">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Báo Cáo</h1>
+                    </div>
+                </div>
+                <div class="glass-panel" style="padding: 40px; text-align: center; color: var(--text-secondary);">
+                    <i class="fa-solid fa-chart-pie" style="font-size: 48px; margin-bottom: 16px; opacity: 0.5;"></i>
+                    <h2>Tính năng đang phát triển</h2>
+                </div>
+            </div>
+            
+            <!-- View: Cài Đặt -->
+            <div id="settings" class="dashboard-container view-section">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Cài Đặt Hệ Thống</h1>
+                    </div>
+                </div>
+                <div class="glass-panel" style="padding: 40px; text-align: center; color: var(--text-secondary);">
+                    <i class="fa-solid fa-gear" style="font-size: 48px; margin-bottom: 16px; opacity: 0.5;"></i>
+                    <h2>Tính năng đang phát triển</h2>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Simple interactivity for demonstration
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                if (this.querySelector('.fa-right-from-bracket')) return; // Ignore logout
+                e.preventDefault();
+                
+                // Update active state in sidebar
+                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                this.classList.add('active');
+
+                // Toggle views
+                const targetId = this.getAttribute('data-target');
+                if (targetId) {
+                    document.querySelectorAll('.view-section').forEach(view => {
+                        view.classList.remove('active');
+                    });
+                    const targetView = document.getElementById(targetId);
+                    if (targetView) {
+                        targetView.classList.add('active');
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
